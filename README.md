@@ -32,7 +32,7 @@ If file not so large and you have enough RAM for sorting , you can use a async f
  
  speed test :
               given :
-                      file with 60 million records ~ 1GB
+                      file with 60 million records ~ 1GB; 
               results :
-                      async method was faster in 2-2.5 times then siple sort (but async method load your CPU to maximum, and take many resource of RAM)
+                      async method was faster in 2-2.5 times then siple sort (but async method load your CPU to maximum, and take many resource of RAM);
  
