@@ -14,6 +14,7 @@ In this case you should to use this algoritm:
 If file not so large and you have enough RAM for sorting , you can use a async function "sorter.WorkerPoolSort("test.txt","chunks", 5000000, 12)".
 In this case you should to calculate some .
   1.(for sorter.WorkerPoolSort)
+  
     1) first argument is a inFile
     2) second argument is a chunk dir
     3) third argument is a number of records to write a chunk
