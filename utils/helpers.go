@@ -40,7 +40,7 @@ func GetSortedData(reader *bufio.Reader, size int) ([]structs.SortItem, error) {
 	return intBuff, nil
 }
 
-func ProcessDataAsync(ctx context.Context, cancel context.CancelFunc, dataChan chan structs.DataChanItem, size int, id int) error {
+func ProcessDataAsync(ctx context.Context, cancel context.CancelFunc, dataChan chan structs.DataChanItem, chunksDir string, size int, id int) error {
 
 	intBuff := make([]structs.SortItem, size)
 	var i int
@@ -89,7 +89,7 @@ func ProcessDataAsync(ctx context.Context, cancel context.CancelFunc, dataChan c
 	default:
 	}
 
-	err := MakeChunkFile(id, &intBuff)
+	err := MakeChunkFile(id, &intBuff, chunksDir)
 
 	//here a test of meaning error
 	//
@@ -143,8 +143,8 @@ func writeSortedData(intBuff *[]structs.SortItem, outFile *os.File) error {
 	return nil
 }
 
-func MakeChunkFile(numName int, data *[]structs.SortItem) error {
-	file, err := createFile("chunks\\" + strconv.Itoa(numName))
+func MakeChunkFile(numName int, data *[]structs.SortItem, dir string) error {
+	file, err := createFile(dir + "\\chunks\\" + strconv.Itoa(numName))
 	if err != nil {
 		return err
 	}

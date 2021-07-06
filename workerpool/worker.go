@@ -11,19 +11,21 @@ import (
 
 // Worker контролирует всю работу
 type Worker struct {
-	ID       int
-	dataChan chan structs.DataChanItem
-	ctx      context.Context
-	cancel   context.CancelFunc
+	ID        int
+	dataChan  chan structs.DataChanItem
+	ctx       context.Context
+	cancel    context.CancelFunc
+	chunksDir string
 }
 
 // NewWorker возвращает новый экземпляр worker-а
-func NewWorker(ctx context.Context, cancel context.CancelFunc, channel chan structs.DataChanItem, ID int) *Worker {
+func NewWorker(ctx context.Context, cancel context.CancelFunc, channel chan structs.DataChanItem, ID int, chunksDir string) *Worker {
 	return &Worker{
-		ID:       ID,
-		dataChan: channel,
-		ctx:      ctx,
-		cancel:   cancel,
+		ID:        ID,
+		dataChan:  channel,
+		ctx:       ctx,
+		cancel:    cancel,
+		chunksDir: chunksDir,
 	}
 }
 
@@ -40,14 +42,9 @@ func (wr *Worker) Start(wg *sync.WaitGroup, c Config) {
 			return
 		default:
 		}
-		err := utils.ProcessDataAsync(wr.ctx, wr.cancel, wr.dataChan, c.PerChunk, wr.ID)
+		err := utils.ProcessDataAsync(wr.ctx, wr.cancel, wr.dataChan, wr.chunksDir, c.PerChunk, wr.ID)
 		if err != nil {
 			wr.cancel()
 		}
 	}()
-}
-
-func Process(id int, data structs.DataChanItem) error {
-
-	return nil
 }

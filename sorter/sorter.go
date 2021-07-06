@@ -2,16 +2,14 @@ package utils
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"sort"
-	"sync"
 
 	"github.com/AlexDespod/sortingmodule/utils"
 	"github.com/AlexDespod/sortingmodule/workerpool"
 )
 
-func SortFile(fileName string, PerChunk int) error {
+func SortFile(fileName, chunks string, PerChunk int) error {
 
 	inFile, err := utils.GetFile(fileName)
 
@@ -21,11 +19,7 @@ func SortFile(fileName string, PerChunk int) error {
 	}
 	defer inFile.Close()
 
-	fail := make(chan error, 1)
-
 	reader := bufio.NewReader(inFile)
-
-	wg := new(sync.WaitGroup)
 
 	i := 0
 
@@ -42,41 +36,19 @@ func SortFile(fileName string, PerChunk int) error {
 			return intBuff[i].Num > intBuff[j].Num
 		})
 
-		go func(i int) {
-			err1 := utils.MakeChunkFile(i, &intBuff)
+		err1 := utils.MakeChunkFile(i, &intBuff, chunks)
 
-			if err1 != nil {
-				fail <- err1
-				wg.Done()
-				return
-			}
-			wg.Done()
-		}(i)
+		if err1 != nil {
+			return err1
+		}
 
 		i++
 
-		if err != io.EOF {
+		if err == io.EOF {
 			break
 		}
 	}
-	wg.Add(i + 1)
 
-	wg.Wait()
-
-	close(fail)
-
-	errState := len(fail)
-
-	fmt.Println(errState)
-
-	if errState != 0 {
-
-		err = <-fail
-
-		fmt.Println(err)
-
-		return err
-	}
 	return nil
 }
 

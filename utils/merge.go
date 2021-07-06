@@ -16,9 +16,9 @@ type InFiles struct {
 	reader *bufio.Reader
 }
 
-func MergeChunks(outFile *os.File) error {
+func MergeChunks(dirForChunks string, outFile *os.File) error {
 
-	filesInfo, err := ioutil.ReadDir("chunks")
+	filesInfo, err := ioutil.ReadDir(dirForChunks)
 
 	if err != nil {
 		panic(err)
@@ -34,7 +34,7 @@ func MergeChunks(outFile *os.File) error {
 
 	for i, file := range filesInfo {
 
-		file, err := GetFile("chunks\\" + file.Name())
+		file, err := GetFile(dirForChunks + "\\" + file.Name())
 		if err != nil {
 			return err
 		}
@@ -43,9 +43,9 @@ func MergeChunks(outFile *os.File) error {
 		inFiles[i].reader = bufio.NewReader(file)
 
 	}
-	memStat()
+	// memStat()
 	err = insertOnce(Heap, &inFiles, k)
-	memStat()
+	// memStat()
 	if err != nil {
 		return err
 	}

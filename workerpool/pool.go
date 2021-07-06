@@ -35,13 +35,14 @@ type Config struct {
 	Filename    string
 	PerChunk    int
 	Concurrency int
+	chunksDir   string
 }
 
 // Run запускает всю работу в Pool и блокирует ее до тех пор,
 // пока она не будет закончена.
 func (p *Pool) Run() error {
 	for i := 1; i <= p.Concurrency; i++ {
-		worker := NewWorker(p.ctx, p.cancel, p.dataStream, i)
+		worker := NewWorker(p.ctx, p.cancel, p.dataStream, i, p.chunksDir)
 		worker.Start(&p.wg, p.Config)
 	}
 
