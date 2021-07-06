@@ -144,7 +144,7 @@ func writeSortedData(intBuff *[]structs.SortItem, outFile *os.File) error {
 }
 
 func MakeChunkFile(numName int, data *[]structs.SortItem, dir string) error {
-	file, err := createFile(dir + "\\chunks\\" + strconv.Itoa(numName))
+	file, err := createFile(dir + "\\" + strconv.Itoa(numName))
 	if err != nil {
 		return err
 	}
